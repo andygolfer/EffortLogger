@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;  // added by Jana for Planning Poker
 
 /**
  * The EffortLoggerConsole class represents the main application for the Effort Logger Console.
@@ -23,6 +24,7 @@ public class EffortLoggerConsole {
     private static JPasswordField passwordField; // Password field
 
     private static EffortLogger effortLogger = new EffortLogger(); // Create an instance of EffortLogger
+    private static PlanningPoker planningPoker = new PlanningPoker();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> createAndShowGUI());
@@ -116,6 +118,22 @@ public class EffortLoggerConsole {
         startActivityPanel(mainPanel);
         projectInfoPanel(mainPanel);
         stopActivityPanel(mainPanel);
+
+                                        // CHANGES MADE BY JANA
+
+        JButton startPlanningPokerButton = new JButton("Start Planning Poker");
+        startPlanningPokerButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            List<Integer> estimates = planningPoker.startPlanningPoker();
+        }
+    });
+
+    // Add the Planning Poker button to GUI
+    mainPanel.add(startPlanningPokerButton);
+
+                                            // CHANGES BY JANA END HERE
+
 
         frame.add(mainPanel); // Add the mainPanel to the frame
         frame.setVisible(true); // Make the mainPanel visible
