@@ -1,8 +1,14 @@
+package EffortLogger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;  // added by Jana for Planning Poker
+import java.nio.file.*;
+import java.io.IOException;
+
+
 
 /**
  * The EffortLoggerConsole class represents the main application for the Effort Logger Console.
@@ -26,15 +32,18 @@ public class EffortLoggerConsole {
     private static EffortLogger effortLogger = new EffortLogger(); // Create an instance of EffortLogger
     private static PlanningPoker planningPoker = new PlanningPoker();
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> createAndShowGUI());
+    public static void main(String[] args) throws IOException{
+    	//EncryptDecrypt.encryptFile("HistoricalBacklog1.txt", "planning_poker_data_encrypted", true); //USED FOR TESTING
+    	SwingUtilities.invokeLater(() -> createAndShowGUI());
+    	//EncryptDecrypt.decryptFile("user_info_encrypted", "ZackBeckwith_encrypted.txt"); //USED FOR TESTING
     }
 
     /**
      * Create and display the main GUI.
      */
     private static void createAndShowGUI() {
-        frame = new JFrame("Effort Logger Console");
+        
+    	frame = new JFrame("Effort Logger Console");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300); // Initial frame size
         frame.setLocationRelativeTo(null); // Center the frame on the screen
@@ -67,17 +76,28 @@ public class EffortLoggerConsole {
                 String password = new String(passwordField.getPassword());
 
                 // Validate the username and password here (replace with your validation logic)
-                if (isValidLogin(username, password)) {
-                    frame.remove(loginPanel); // Remove the login panel
-                    createMainPanel(); // Create and show the main panel
-                    frame.setSize(1200, 800); // Adjusted frame size after login
-                    frame.setLocationRelativeTo(null); // Center the frame
-                } else {
-                    JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
-                    // You can add more error handling here
+                try
+                {
+                	if (isValidLogin(username, password)) 
+                	{
+                        frame.remove(loginPanel); // Remove the login panel
+                        createMainPanel(); // Create and show the main panel
+                        frame.setSize(1200, 800); // Adjusted frame size after login
+                        frame.setLocationRelativeTo(null); // Center the frame
+                	}
+                	else
+                	{
+                		JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+                        // You can add more error handling here
+                	}
+                }
+                catch(Exception e1)
+                {
+                	e1.printStackTrace();
                 }
             }
         });
+     
 
         JLabel usernameLabel = new JLabel("Username:");
         usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -100,11 +120,18 @@ public class EffortLoggerConsole {
      * @param password The entered password
      * @return true if the login is valid, false otherwise
      */
-    private static boolean isValidLogin(String username, String password) {
-        // Implement your login validation logic here.
-        // Return true if the username and password are valid, otherwise return false.
-        // You can replace this with a real authentication check.
-        return username.equals("user") && password.equals("password");
+    private static boolean isValidLogin(String username, String password) throws IOException
+    {
+        Path validUser = EncryptDecrypt.searchUserFiles(username, password);
+    	if(validUser == null)
+    	{
+    		return false;
+    	}
+    	else
+    	{
+    		EffortLogger.setUserInfo(validUser);
+    		return true;
+    	}
     }
 
     /**
