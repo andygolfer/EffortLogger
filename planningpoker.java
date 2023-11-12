@@ -1,8 +1,12 @@
+package EffortLogger;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.io.IOException;
 
 public class PlanningPoker extends JFrame {
     private JPanel planningPokerPanel;
@@ -17,7 +21,7 @@ public class PlanningPoker extends JFrame {
     private JButton searchBarButton;
     private JLabel historicalDataLabel;
 
-    public PlanningPoker() {
+    public PlanningPoker(){
         this.historicalData = new HistoricalData();
         estimates = new ArrayList<>();
 
@@ -46,7 +50,14 @@ public class PlanningPoker extends JFrame {
         searchField.setText("    ");
 
         searchButton = new JButton("Search");
-        searchButton.addActionListener(e -> performSearch());
+        searchButton.addActionListener(e -> {
+			try {
+				performSearch();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 
         JPanel searchFieldPanel = new JPanel(new FlowLayout());
         searchFieldPanel.add(new JLabel("Search Historical Data:"));
@@ -71,18 +82,6 @@ public class PlanningPoker extends JFrame {
         setLocationRelativeTo(null);
 
         SwingUtilities.invokeLater(() -> searchField.requestFocusInWindow());
-    }
-
-    private void performSearch() {
-        String searchKeyword = searchField.getText().trim();
-        String selectedOption = (String) searchOptionDropdown.getSelectedItem();
-        List<String> matchingProjects = searchHistoricalData(searchKeyword, selectedOption);
-        if (!matchingProjects.isEmpty()) {
-            displaySearchResults(matchingProjects);
-        } else {
-            JOptionPane.showMessageDialog(PlanningPoker.this, "No matching projects found.",
-                    "Search Results", JOptionPane.INFORMATION_MESSAGE);
-        }
     }
 
     private void displayPokerCards() {
@@ -139,12 +138,26 @@ public class PlanningPoker extends JFrame {
                 .collect(Collectors.toList());
     }
 
-    private void displaySearchResults(List<String> results) {
+    private void displaySearchResults(File[] results) {
         StringBuilder message = new StringBuilder("Search Results:\n");
-        for (String entry : results) {
-            message.append(entry).append("\n");
+        for (File file : results) {
+            message.append(file.getName()).append("\n");
         }
         JOptionPane.showMessageDialog(this, message.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void performSearch() throws IOException {
+        String searchKeyword = searchField.getText().trim();
+        // Search the encrypted files for the keyword
+        File[] matchingFiles = EncryptDecrypt.searchPlanningPokerFiles(searchKeyword);
+
+        // If matching files are found, display their names
+        if (matchingFiles.length > 0) {
+            displaySearchResults(matchingFiles);
+        } else {
+            JOptionPane.showMessageDialog(PlanningPoker.this, "No matching projects found.",
+                    "Search Results", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void displayHistoricalData() {
