@@ -1,14 +1,14 @@
+package EffortLogger;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import caesarianEncryption.EncryptDecrypt;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.nio.file.*;
 
 /**
  * This class represents an Effort Logger that logs time and effort data into a file.
  */
-public class EffortLogger {
+public class EffortLogger{
     int counter = 0; // Counter to keep track of the number of logged efforts
     long startTime; // Time when an effort is started
     long endTime; // Time when an effort is ended
@@ -19,6 +19,7 @@ public class EffortLogger {
     String lifeCycle; // The life cycle associated with the effort
     String effortCategory; // The category of the effort
     String formattedDate; // Formatted date in MM/dd/yyyy format
+    private static Path userFile;
 
     /**
      * Starts the effort timer and initializes relevant data.
@@ -73,27 +74,20 @@ public class EffortLogger {
      */
     public void produceLog() {
         String formattedCounter = Integer.toString(counter); // Convert counter to a string
-        String fileName = "output.txt";
+        
+        String encryptedData = EncryptDecrypt.encryptString(formattedCounter + formattedDate + formattedStartTime + formattedEndTime + formattedDeltaTime + lifeCycle + effortCategory + "\n");
 
         // Try to write data to a file in append mode (true)
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(fileName, true);
-            PrintWriter writer = new PrintWriter(fileOutputStream);
-
-            // Write the formatted data to the file
-            writer.println(formattedCounter + formattedDate + formattedStartTime + formattedEndTime + formattedDeltaTime + lifeCycle + effortCategory);
-
-            writer.close(); // Close the writer
-            fileOutputStream.close(); // Close the file output stream
+        	EncryptDecrypt.storeEncryptedFile(encryptedData, userFile, "user_info_encrypted", false);
         } catch (IOException e) {
             e.printStackTrace(); // Handle any IO exceptions
         }
 
-        // Call the static encryptFile method from the EncryptDecrypt class to encrypt the file
-        try {
-            EncryptDecrypt.encryptFile();
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle any IO exceptions when encrypting
-        }
+    }
+    
+    public static void setUserInfo(Path userFilePath)
+    {
+    	userFile = userFilePath;
     }
 }
