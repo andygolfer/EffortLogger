@@ -31,9 +31,10 @@ public class EffortLoggerConsole {
 
     private static EffortLogger effortLogger = new EffortLogger(); // Create an instance of EffortLogger
     private static PlanningPoker planningPoker = new PlanningPoker();
+    private static EffortLoggerHelp effortLoggerHelp = new EffortLoggerHelp();
 
     public static void main(String[] args) throws IOException{
-    	//EncryptDecrypt.encryptFile("HistoricalBacklog1.txt", "planning_poker_data_encrypted", true); //USED FOR TESTING
+    	//EncryptDecrypt.encryptFile("ZackBeckwith.txt", "user_info_encrypted", true); //USED FOR TESTING
     	SwingUtilities.invokeLater(() -> createAndShowGUI());
     	//EncryptDecrypt.decryptFile("user_info_encrypted", "ZackBeckwith_encrypted.txt"); //USED FOR TESTING
     }
@@ -68,6 +69,18 @@ public class EffortLoggerConsole {
         passwordField.setPreferredSize(new Dimension(200, 30)); // Set field size
 
         JButton loginButton = new JButton("Login");
+        
+      //turtorial button(hoang)
+        JButton HelpButton = new JButton("Help");
+        HelpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        HelpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                turtorial_login(loginFields, 0);
+            } 
+        });
+        //
+        
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -109,6 +122,10 @@ public class EffortLoggerConsole {
         loginFields.add(passwordLabel);
         loginFields.add(passwordField);
         loginFields.add(loginButton);
+        
+      //turtorial_login (hoang)
+        loginFields.add(HelpButton);
+        //
 
         loginPanel.add(loginFields, BorderLayout.CENTER);
     }
@@ -185,6 +202,17 @@ public class EffortLoggerConsole {
 
         // Add the title panel to the parent panel
         parentPanel.add(titlePanel);
+        
+     // turtorial for the poker(hoang)
+        JButton HelpButton = new JButton("Help");
+        titlePanel.add(HelpButton, BorderLayout.WEST);
+        HelpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                turtorial_login(parentPanel, 1);
+            } 
+        });
+        
     }
 
     /**
@@ -348,4 +376,9 @@ public class EffortLoggerConsole {
         // Add the "Stop Activity" panel to the parent panel
         parentPanel.add(stopActivityPanel);
     }
+
+//turtorial class (hoang)
+private static void turtorial_login(JPanel parentPanel, int state){
+    effortLoggerHelp.GifExample(state);
+}
 }
