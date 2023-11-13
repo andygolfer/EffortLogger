@@ -1,7 +1,7 @@
 # EffortLogger
 
 Team Members:
-Zach Beckwith
+Zack Beckwith
 Andrew Knoll
 Quy Hoang Nguyen
 Dylan O'Hara
