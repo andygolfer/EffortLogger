@@ -1,3 +1,0 @@
-Username: user
-Password: password
-RBAC: Standard
