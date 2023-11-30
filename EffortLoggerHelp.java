@@ -4,7 +4,9 @@ package EffortLogger;
 //Creator: Quy Hoang Nguyen
 //Last Updated: 11/29/2023
 //Project: CSE360 Team Th15 EFFORTLOGGER V2
-//Description: 
+//Description: This class is responsible for the creation of the Tutorial program. The class will
+//be activated when the user clicks the help button. After that, the program will lead the user to a 
+//google drive file that contains all the necessary videos to familiarize themselves with the whole program. 
 //
 
 import javax.swing.*;
